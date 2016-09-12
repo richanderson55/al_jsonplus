@@ -1,0 +1,19 @@
+{
+  "name": "jsonplus",
+  "version": "0.0.1",
+  "description": "json loader with simple function support",
+  "main": "index.js",
+  "scripts": {
+    "ast": "node astTest.js",
+    "test": "npm run test:unit",
+    "test:unit": "mocha --recursive --reporter spec test/unit/scalar test/unit/mixed"
+  },
+  "author": "Rich Anderson - rich.anderson@hotmail.co.uk",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.5.0"
+  },
+  "dependencies": {
+    "prettyjson": "^1.1.3"
+  }
+}
