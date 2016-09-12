@@ -92,6 +92,27 @@ function expandProcessEnvReferences(item, index) {
     }
   }
 }
+
+
+function runFunctions(item, stdFunctions) {
+  for(let subItem of item.items) {
+    if (subItem.type === 'container') {
+        runFunctions(subItem, stdFunctions);
+    } else {
+      if (subItem.name === "$function" || subItem.name === "$func") {
+        const funcname = subItem.value;
+        if (!funcname) {
+          throw new Error(`function name [${funcname}] not found`);
+        }
+        const newItem = ast.newItem(subItem.parent.name, stdFunctions[funcname]());
+        subItem.parent.parent.replaceItem(subItem.parent, newItem);
+
+        console.log(`runing function [${funcname}]`)
+      }
+    }
+  }
+}
+
 const hello = {
   "variables": {
     "env": {
@@ -111,8 +132,9 @@ const hello = {
   "anotherValue": { "$value": "$object1.key1_object1"},
   "anotherValue2": { "$env": "USER"},
   "anotherValue3": { "$env": { "$value": "$variables.env.username" } },
-  "cloneEnv": { "$value": "$variables.env.username"}
-
+  "cloneEnv": { "$value": "$variables.env.username"},
+  "func": { "$func": "hello"},
+  "now": { "$func": "now"}
 }
 
 const myHello = ast.jsonLoader(hello);
@@ -124,6 +146,12 @@ const idIndex = {};
 buildGlobalIdIndex(myHello, idIndex);
 expandValueReferences(myHello, idIndex);
 expandProcessEnvReferences(myHello);
+
+const stdFunctions = {
+  "hello": function() { return "hello world"},
+  "now": function() { return new Date() }
+}
+runFunctions(myHello, stdFunctions);
 
 serializeItemToObject(myHello, myHelloRebuilt);
 
