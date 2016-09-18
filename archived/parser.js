@@ -20,7 +20,7 @@ function isValueLookupExpression(item) {
   return false;
 }
 
-function isConcatExpression(item) {
+  function isConcatExpression(item) {
   if ( Object.keys(item)[0] === '$concat') {
     return true;
   }

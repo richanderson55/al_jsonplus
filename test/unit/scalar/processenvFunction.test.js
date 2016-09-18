@@ -1,8 +1,6 @@
 'use strict';
 const expect = require('chai').expect;
-
-const parser = require('../../../parser');
-const prettyjson = require('prettyjson');
+const jsonplus = require('../../../ast');
 
 process.env.TEST_A = 'hello';
 process.env.TEST_B = 'world';
@@ -14,12 +12,9 @@ describe('process.env function tests', () => {
       "hello2": {"$process.env": "TEST_A"}
     }
 
-    const options = { results: {}};
-    const results = parser(simple, options);
-//    console.log(results);
-    expect(options.results.global).to.not.equal(null);
-    expect(Object.keys(options.results.global.flattenedTree).length).to.equal(2);
-    expect(results.hello2).to.equal(process.env.TEST_A);
+    const tree = jsonplus.load(simple);
+    expect(tree).to.not.equal(null);
+    expect(tree.hello2).to.equal(process.env.TEST_A);
   });
 
   it('basic lookup a value from inside a level 1 object', function () {
@@ -30,11 +25,9 @@ describe('process.env function tests', () => {
       }
     }
 
-    const options = { results: {}};
-    const results = parser(simple, options);
-    expect(options.results.global).to.not.equal(null);
-    expect(Object.keys(options.results.global.flattenedTree).length).to.equal(2);
-    expect(results.object.hello2).to.equal(process.env.TEST_A);
+    const tree = jsonplus.load(simple);
+    expect(Object.keys(tree).length).to.equal(2);
+    expect(tree.object.hello2).to.equal(process.env.TEST_A);
   });
 
   it('basic lookup a value from inside a level 2 object', function () {
@@ -47,11 +40,10 @@ describe('process.env function tests', () => {
       }
     }
 
-    const options = { results: {}};
-    const results = parser(simple, options);
-    expect(options.results.global).to.not.equal(null);
-    expect(Object.keys(options.results.global.flattenedTree).length).to.equal(2);
-    expect(results.object.object2.hello2).to.equal(process.env.TEST_A);
+    const tree = jsonplus.load(simple);
+    expect(tree).to.not.equal(null);
+    expect(Object.keys(tree).length).to.equal(2);
+    expect(tree.object.object2.hello2).to.equal(process.env.TEST_A);
   });
 
 });

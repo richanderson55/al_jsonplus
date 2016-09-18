@@ -1,7 +1,18 @@
 # JSON Plus
 
-Experimental work to see if there is a blend of JSON with simple extensions that keeps
-the nice attributes of JSON, but, allows simple functions and lookups for common use cases.
+Experimental work to see if there is a blend of JSON with simple extension functions that keeps
+the nice attributes of JSON, but, allows simple functions and lookups for common use cases that are often moved to JavaScript.
+
+## Feature Backlog
+
+Injection of environment variables into the JSON.
+Basic concatination functions
+Basic references to copy values from one part of the JSON document to another without duplicating the values.
+Index for items in the JSON object to allow 'flattened' access (i.e. root.container.somevalue)
+
+## references
+
+https://www.youtube.com/watch?v=ymjClXYuG2w&index=3&list=PLe-ggMe31CTcEwaU8a1P1Gd95A77HV85K
 
 ### Copyright (c) 2016 Richard Anderson
 

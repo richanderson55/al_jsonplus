@@ -1,7 +1,6 @@
 'use strict';
 
 const ast = require('./index');
-
 const debug = {depth: false};
 
 module.exports = function(json) {
@@ -11,9 +10,7 @@ module.exports = function(json) {
   return rootItem;
 }
 
-
 function walkChildItems(item, object, depth, context) {
-
   for(let key in object) {
     let itemKey = null;
     if (depth === 0) {
@@ -23,7 +20,7 @@ function walkChildItems(item, object, depth, context) {
     }
 
     // if the item is an object, see if the first child is an known expression like $concat
-    if (typeof object[key] === 'object') {
+    if (typeof object[key] === 'object' &&  !Array.isArray(object[key])) {
       if (debug.depth) {
         console.log(`processing Object.  item [${itemKey}], object[key] = [${JSON.stringify(object[key])}]`);
       }
@@ -31,10 +28,22 @@ function walkChildItems(item, object, depth, context) {
       const childContainer = ast.newContainer(key);
       childContainer.id = itemKey;
       childContainer.parent = item;
-
       walkChildItems(childContainer, object[key], depth + 1, itemKey);
-
       item.push(childContainer);
+      continue;
+    }
+
+    // if the item is an object, see if the first child is an known expression like $concat
+    if (typeof object[key] === 'object' &&  Array.isArray(object[key])) {
+      if (debug.depth) {
+        console.log(`processing Array.  item [${itemKey}], object[key] = [${JSON.stringify(object[key])}]`);
+      }
+
+      const childArray = ast.newArray(key);
+      childArray.id = itemKey;
+      childArray.parent = item;
+      walkChildItems(childArray, object[key], depth + 1, itemKey);
+      item.push(childArray);
       continue;
     }
 

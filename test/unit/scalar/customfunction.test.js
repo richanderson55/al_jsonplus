@@ -1,6 +1,6 @@
 'use strict';
 const expect = require('chai').expect;
-const parser = require('../../../parser');
+const jsonplus = require('../../../ast');
 
 describe('concat function tests', () => {
 
@@ -8,7 +8,7 @@ describe('concat function tests', () => {
     if (!args) {
       throw new Error('echoArgs expected args');
     }
-    return args;
+    return args.value;
   }
 
   it('call a custom function', function () {
@@ -19,29 +19,36 @@ describe('concat function tests', () => {
                   "args": "8"}
     }
 
-    const options = { results: {}}; // by including results we get the output from the parser
-    options.functions = {};
-    options.functions.echoArgs = echoArgs;
-    const results = parser(simple, options);
 
-    expect(Object.keys(options.results.global.flattenedTree).length).to.equal(2);
-    expect(results.field1).to.equal("7");
-    expect(results.field2).to.equal("8");
+    const functions = {};
+    functions.echoArgs = echoArgs;
+
+    const options = { functions}
+    const tree = jsonplus.load(simple, options);
+
+    expect(Object.keys(tree).length).to.equal(2);
+    expect(tree.field1).to.equal("7");
+    expect(tree.field2).to.equal("8");
   });
 
-  function echoArgs2(args) {
+  // simple function to multiple two values
+  function multiply(args) {
     if (!args) {
       throw new Error('echoArgs expected args');
     }
-    return args;
+
+    let a = args.getByKey('a');
+    let b = args.getByKey('b');
+
+    return a.value * b.value;
   }
 
   it('basic concat from other top level values', function () {
     const simple = {
       "hello": "world",
-      "field": { "$function": "echoArgs2",
+      "field": { "$function": "multiply",
                  "args": {
-                   "a": { "$value": "$hello" },
+                   "a": "5",
                    "b": "2"
                  }
                }
@@ -49,14 +56,12 @@ describe('concat function tests', () => {
 
     const options = { results: {}}; // by including results we get the output from the parser
     options.functions = {};
-    options.functions.echoArgs2 = echoArgs2;
-    const results = parser(simple, options);
+    options.functions.multiply = multiply;
+    const tree = jsonplus.load(simple, options);
 
-    expect(Object.keys(options.results.global.flattenedTree).length).to.equal(2);
-//    expect(results.field1).to.equal("7");
-//    expect(results.field2).to.equal("8");
-
-    console.log(results);
+    expect(Object.keys(tree).length).to.equal(2);
+    //console.log(tree);
+    expect(tree.field).to.equal(10);
   });
 
 });

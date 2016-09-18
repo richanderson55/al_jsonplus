@@ -2,9 +2,8 @@
 
 const ast = require('./ast');
 const prettyjson = require('prettyjson');
-
-
 const rootItem = ast.newContainer('root');
+const basicFunctions = require('./ast/basicFunctions');
 rootItem.push(ast.newItem('hello', 'world'));
 rootItem.push(ast.newItem('how', 'are'));
 rootItem.push(ast.newItem('you', 'doing'));
@@ -19,99 +18,8 @@ childContainer.push(ast.newFunc('amazing', function() { return 'grace' }));
 rootItem.push(childContainer);
 
 const newObject = {};
-serializeItemToObject(rootItem, newObject);
+basicFunctions.serializeTreeToJsonObject(rootItem, newObject);
 
-function serializeItemToObject(item, destination) {
-  for(let subItem of item.items) {
-    if (subItem.type === 'container') {
-      destination[subItem.name] = {};
-      serializeItemToObject(subItem, destination[subItem.name]);
-    } else {
-      destination[subItem.name] = subItem.value;
-    }
-  }
-}
-
-function buildGlobalIdIndex(item, index) {
-  for(let subItem of item.items) {
-    if (subItem.type === 'container') {
-      index[subItem.id] = subItem;
-      buildGlobalIdIndex(subItem, index);
-    } else {
-      if (!subItem.id) {
-        console.log(item);
-        throw new Error('id missing');
-      }
-      index[subItem.id] = subItem;
-    }
-  }
-}
-
-function expandValueReferences(item, index) {
-  for(let subItem of item.items) {
-    if (subItem.type === 'container') {
-      expandValueReferences(subItem, index);
-    } else {
-      // value reference
-      if (subItem.name === "$value") {
-        const indexEntry = index[subItem.value]
-        if (!indexEntry) {
-          throw new Error(`entry [${subItem.value}] not found in idIndex`);
-        }
-
-        if (indexEntry.type === 'item') {
-          // create a new item
-          const newItem = ast.newItem(subItem.parent.name, indexEntry.value);
-          subItem.parent.parent.replaceItem(subItem.parent, newItem);
-        } else if (indexEntry.type === 'container') {
-            throw new Error(`$value references do not work in containers/objects [${subItem.id}]`);
-        }
-      }
-    }
-  }
-}
-
-function expandProcessEnvReferences(item, index) {
-  for(let subItem of item.items) {
-    if (subItem.type === 'container') {
-      expandProcessEnvReferences(subItem, index);
-    } else {
-      // value reference
-      if (subItem.name === "$process.env" || subItem.name === "$env") {
-        const envValue = process.env[subItem.value]
-        if (!envValue) {
-          throw new Error(`env variable [${envValue}] not found`);
-        }
-        if (subItem.parent === null) {
-          console.log(subItem);
-          throw new Error(`expected parent for subItem`);
-        }
-        const newItem = ast.newItem(subItem.parent.name, envValue);
-        subItem.parent.parent.replaceItem(subItem.parent, newItem);
-      }
-    }
-  }
-}
-
-
-function runFunctions(item, stdFunctions) {
-  for(let subItem of item.items) {
-    if (subItem.type === 'container') {
-        runFunctions(subItem, stdFunctions);
-    } else {
-      if (subItem.name === "$function" || subItem.name === "$func") {
-        const funcname = subItem.value;
-        if (!funcname) {
-          throw new Error(`function name [${funcname}] not found`);
-        }
-        const newItem = ast.newItem(subItem.parent.name, stdFunctions[funcname]());
-        subItem.parent.parent.replaceItem(subItem.parent, newItem);
-
-        console.log(`runing function [${funcname}]`)
-      }
-    }
-  }
-}
 
 const hello = {
   "variables": {
@@ -138,22 +46,19 @@ const hello = {
 }
 
 const myHello = ast.jsonLoader(hello);
-
 const myHelloRebuilt = {};
 
 // build an id index to all of the items
 const idIndex = {};
-buildGlobalIdIndex(myHello, idIndex);
-expandValueReferences(myHello, idIndex);
-expandProcessEnvReferences(myHello);
+basicFunctions.buildGlobalIdIndex(myHello, idIndex);
+basicFunctions.expandValueReferences(myHello, idIndex);
+basicFunctions.expandEnvReferences(myHello);
 
 const stdFunctions = {
   "hello": function() { return "hello world"},
   "now": function() { return new Date() }
 }
-runFunctions(myHello, stdFunctions);
-
-serializeItemToObject(myHello, myHelloRebuilt);
-
+basicFunctions.runFunctions(myHello, stdFunctions);
+basicFunctions.serializeTreeToJsonObject(myHello, myHelloRebuilt);
 
 console.log(myHelloRebuilt);

@@ -1,8 +1,6 @@
 'use strict';
 const expect = require('chai').expect;
-
-const parser = require('../../../parser');
-const prettyjson = require('prettyjson');
+const jsonplus = require('../../../ast');
 
 describe('value function tests', () => {
   it('basic lookup a value test in a flat object', function () {
@@ -11,12 +9,10 @@ describe('value function tests', () => {
       "hello2": {"$value": "$hello"}
     }
 
-    const options = { results: {}};
-    const results = parser(simple, options);
-    //console.log(results);
-    expect(options.results.global).to.not.equal(null);
-    expect(Object.keys(options.results.global.flattenedTree).length).to.equal(2);
-    expect(results.hello2).to.equal(results.hello);
+    const tree = jsonplus.load(simple);
+    expect(tree).to.not.equal(null);
+    expect(Object.keys(tree).length).to.equal(2);
+    expect(tree.hello2).to.equal(tree.hello);
   });
 
   it('basic lookup a value from inside a level 1 object', function () {
@@ -27,11 +23,12 @@ describe('value function tests', () => {
       }
     }
 
-    const options = { results: {}};
-    const results = parser(simple, options);
-    expect(options.results.global).to.not.equal(null);
-    expect(Object.keys(options.results.global.flattenedTree).length).to.equal(2);
-    expect(results.object.hello2).to.equal(results.hello);
+    const tree = jsonplus.load(simple);
+    expect(tree).to.not.equal(null);
+    expect(Object.keys(tree).length).to.equal(2);
+    expect(tree.object.hello2).to.equal(simple.hello);
+    expect(tree.object.hello2).to.equal(tree.hello);
+
   });
 
   it('basic lookup a value from inside a level 2 object', function () {
@@ -44,11 +41,10 @@ describe('value function tests', () => {
       }
     }
 
-    const options = { results: {}};
-    const results = parser(simple, options);
-    expect(options.results.global).to.not.equal(null);
-    expect(Object.keys(options.results.global.flattenedTree).length).to.equal(2);
-    expect(results.object.object2.hello2).to.equal(results.hello);
+    const tree = jsonplus.load(simple);
+    expect(tree).to.not.equal(null);
+    expect(Object.keys(tree).length).to.equal(2);
+    expect(tree.object.object2.hello2).to.equal(simple.hello);
   });
 
   it('set a value in the root of an object from a level 2 object', function () {
@@ -61,11 +57,11 @@ describe('value function tests', () => {
       }
     }
 
-    const options = { results: {}};
-    const results = parser(simple, options);
-    expect(options.results.global).to.not.equal(null);
-    expect(Object.keys(options.results.global.flattenedTree).length).to.equal(2);
-    expect(results.hello).to.equal(results.object.object2.world);
+    const tree = jsonplus.load(simple);
+    expect(tree).to.not.equal(null);
+    expect(Object.keys(tree).length).to.equal(2);
+    expect(tree.hello).to.equal(simple.object.object2.world);
+    expect(tree.hello).to.equal(tree.object.object2.world);
   });
 
 });
