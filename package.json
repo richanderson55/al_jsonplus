@@ -6,7 +6,7 @@
   "scripts": {
     "ast": "node astTest.js",
     "test": "npm run test:unit",
-    "test:unit": "mocha --recursive --reporter spec test/unit/scalar test/unit/mixed"
+    "test:unit": "mocha --recursive --reporter spec test/unit/scalar test/unit/mixed test/unit/core"
   },
   "author": "Rich Anderson - rich.anderson@hotmail.co.uk",
   "license": "ISC",

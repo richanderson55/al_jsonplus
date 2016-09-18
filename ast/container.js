@@ -13,6 +13,10 @@ class container extends item {
     return true;
   }
 
+  get isObject() {
+    return true;
+  }
+
   set value(value) {
     this._value = value;
   }

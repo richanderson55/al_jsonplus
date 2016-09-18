@@ -250,7 +250,33 @@ module.exports.runFunctions = function (item, index, stdFunctions) {
 }
 
 module.exports.serializeTreeToJsonObject = function (item, destination) {
+  //console.log(`serializeTreeToJsonObject: [${item.name}], type [${item.type}]`);
+
+  if (item.type === ast.NodeTypes.ARRAY) {
+
+    for(let subItem of item.items) {
+      //console.log(`subItem: [${subItem.name}]`);
+      if (subItem.type === ast.NodeTypes.CONTAINER) {
+        let o = {};
+        module.exports.serializeTreeToJsonObject(subItem, o);
+        destination.push(o);
+      } else if (subItem.type === ast.NodeTypes.ITEM) {
+        let o = {};
+        o[subItem.name] = subItem.value;
+        destination.push(o);
+      } else if (subItem.type === ast.NodeTypes.ARRAY) {
+        let o = [];
+        module.exports.serializeTreeToJsonObject(subItem, o);
+        destination.push(o);
+      } else {
+        throw new Error(`type not supported ${subItem.type}`);
+      }
+    }
+    return;
+  }
+
   for(let subItem of item.items) {
+//    console.log(`subItem: [${subItem.name}]`);
     if (subItem.type === ast.NodeTypes.CONTAINER) {
       destination[subItem.name] = {};
       module.exports.serializeTreeToJsonObject(subItem, destination[subItem.name]);

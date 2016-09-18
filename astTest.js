@@ -1,64 +1,42 @@
 'use strict';
 
 const ast = require('./ast');
-const prettyjson = require('prettyjson');
-const rootItem = ast.newContainer('root');
 const basicFunctions = require('./ast/basicFunctions');
-rootItem.push(ast.newItem('hello', 'world'));
-rootItem.push(ast.newItem('how', 'are'));
-rootItem.push(ast.newItem('you', 'doing'));
-rootItem.push(ast.newFunc('amazing', function() { return 'grace' }));
 
-const childContainer = ast.newContainer('child1');
-childContainer.push(ast.newItem('hello', 'world'));
-childContainer.push(ast.newItem('how', 'are'));
-childContainer.push(ast.newItem('you', 'doing'));
-childContainer.push(ast.newFunc('amazing', function() { return 'grace' }));
+const rootItem = ast.newContainer('root');
+rootItem.push(ast.newItem('name', 'richard'));
+rootItem.push(ast.newItem('age', '21'));
 
+
+const address = ast.newContainer('home address');
+rootItem.push(address);
+address.push(ast.newItem('line1', '136 lookout rd'));
+
+const childContainer = ast.newContainer('work address');
 rootItem.push(childContainer);
+childContainer.push(ast.newItem('line 1', '71 hanover rd'));
+
+const array = ast.newArray('parent');
+rootItem.push(array);
+
+
+const subarray1 = ast.newArray('one');
+array.push(subarray1);
+subarray1.push(ast.newItem('line1', 'value1'));
+subarray1.push(ast.newItem('line2', 'value 2'));
+subarray1.push(ast.newItem('line3', 'value 3'));
+
+array.push(ast.newItem('line1', '136 lookout rd'));
+
+const subarray2 = ast.newArray('two');
+array.push(subarray2);
+subarray2.push(ast.newItem('subline1', 'value1'));
+subarray2.push(ast.newItem('subline2', 'value 2'));
+subarray2.push(ast.newItem('subline3', 'value 3'));
 
 const newObject = {};
 basicFunctions.serializeTreeToJsonObject(rootItem, newObject);
 
+console.log(newObject);
 
-const hello = {
-  "variables": {
-    "env": {
-      "username": "USER"
-    }
-  },
-  "hello": "world",
-  "how": "are",
-  "you": "doing",
-  "object1": {
-    "key1_object1": "value1_object1"
-  },
-  "object2": {
-    "key1_object2": "value1_object2"
-  },
-  "value": { "$value": "$hello"},
-  "anotherValue": { "$value": "$object1.key1_object1"},
-  "anotherValue2": { "$env": "USER"},
-  "anotherValue3": { "$env": { "$value": "$variables.env.username" } },
-  "cloneEnv": { "$value": "$variables.env.username"},
-  "func": { "$func": "hello"},
-  "now": { "$func": "now"}
-}
-
-const myHello = ast.jsonLoader(hello);
-const myHelloRebuilt = {};
-
-// build an id index to all of the items
-const idIndex = {};
-basicFunctions.buildGlobalIdIndex(myHello, idIndex);
-basicFunctions.expandValueReferences(myHello, idIndex);
-basicFunctions.expandEnvReferences(myHello);
-
-const stdFunctions = {
-  "hello": function() { return "hello world"},
-  "now": function() { return new Date() }
-}
-basicFunctions.runFunctions(myHello, stdFunctions);
-basicFunctions.serializeTreeToJsonObject(myHello, myHelloRebuilt);
-
-console.log(myHelloRebuilt);
+console.log(JSON.stringify(newObject));

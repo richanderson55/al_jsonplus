@@ -25,7 +25,14 @@ class item {
 
     return false;
   }
+
   get isContainer() {
+    return false;
+  }
+  get isObject() {
+    return false;
+  }
+  get isArray() {
     return false;
   }
 

@@ -1,8 +1,6 @@
 'use strict';
 const expect = require('chai').expect;
-const ast = require('../../ast');
-
-const basicFunctions = require('../../ast/basicFunctions');
+const ast = require('../../../ast');
 
 const hello = {
   "variables": {
@@ -32,7 +30,7 @@ describe('basic test of the loader - @jsonloader', () => {
   it('ensure the root is a container and named as expected', function () {
     const myHello = ast.jsonLoader(hello);
     expect(myHello.id).to.equal('root');
-    expect(myHello.type).to.equal(ast.types.NodeTypes.CONTAINER);
+    expect(myHello.type).to.equal(ast.NodeTypes.CONTAINER);
   });
 
 });

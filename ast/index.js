@@ -9,10 +9,6 @@ module.exports.newItem = function(name, value) {
   return new module.exports.item(name, value);
 }
 
-module.exports.newFunc= function(name, value) {
-  return new module.exports.func(name, value);
-}
-
 module.exports.newArray = function(name) {
   return new module.exports.array(name);
 }

@@ -13,6 +13,9 @@ class array extends item {
     return true;
   }
 
+  get isArray() {
+    return true;
+  }
 
 }
 
