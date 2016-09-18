@@ -1,15 +1,15 @@
 {
-  "name": "jsonplus",
-  "version": "0.0.1",
-  "description": "json loader with simple function support",
-  "main": "index.js",
+  "name": "al_jsonplus",
+  "version": "0.0.5",
+  "description": "Experimental json loader that added basic functions to json like $value, $process.env, $concat but 100% in JSON format",
+  "main": "ast/index.js",
   "scripts": {
     "ast": "node astTest.js",
     "test": "npm run test:unit",
     "test:unit": "mocha --recursive --reporter spec test/unit/scalar test/unit/mixed test/unit/core"
   },
-  "author": "Rich Anderson - rich.anderson@hotmail.co.uk",
-  "license": "ISC",
+  "author": "Rich Anderson - rich@andersonlabs.onmicrosoft.com",
+  "license": "(C) Richard Anderson",
   "devDependencies": {
     "chai": "^3.5.0"
   },

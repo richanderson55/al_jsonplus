@@ -7,14 +7,13 @@ const rootItem = ast.newContainer('root');
 rootItem.push(ast.newItem('name', 'richard'));
 rootItem.push(ast.newItem('age', '21'));
 
-
 const address = ast.newContainer('home address');
 rootItem.push(address);
-address.push(ast.newItem('line1', '136 lookout rd'));
+address.push(ast.newItem('line1', 'jump road'));
 
 const childContainer = ast.newContainer('work address');
 rootItem.push(childContainer);
-childContainer.push(ast.newItem('line 1', '71 hanover rd'));
+childContainer.push(ast.newItem('line 1', 'magic lane'));
 
 const array = ast.newArray('parent');
 rootItem.push(array);
@@ -26,7 +25,7 @@ subarray1.push(ast.newItem('line1', 'value1'));
 subarray1.push(ast.newItem('line2', 'value 2'));
 subarray1.push(ast.newItem('line3', 'value 3'));
 
-array.push(ast.newItem('line1', '136 lookout rd'));
+array.push(ast.newItem('line1', 'jump road'));
 
 const subarray2 = ast.newArray('two');
 array.push(subarray2);
