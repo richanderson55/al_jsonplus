@@ -1,0 +1,27 @@
+{
+  "john": {
+    "age": "23",
+    "lastname": "smith"
+  },
+  "bob": {
+    "age": "29",
+    "firstname": "bob",
+    "lastname": "smith",
+    "fullname": { "$concat": ["$bob.firstname", " ", "$bob.lastname"]}
+  },
+  "jonny": {
+    "age": {"$value": "$bob.age"},
+    "firstname": {"$value": "$bob.firstname"},
+    "lastname":  {"$value": "$bob.lastname"},
+    "fullname": { "$concat": ["$bob.firstname", " ", "$bob.lastname"]},
+    "home_directory": {"$value": "$options.home"}
+  },
+  "greg": {
+    "age": { "$value": "$options.defaultAge"},
+    "lastname": "smith"
+  },
+  "options": {
+    "defaultAge": "21",
+    "home": {"$process.env": "HOME"}
+  }
+}

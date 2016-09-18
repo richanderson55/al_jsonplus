@@ -1,10 +1,11 @@
 {
   "name": "al_jsonplus",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Experimental json loader that added basic functions to json like $value, $process.env, $concat but 100% in JSON format",
   "main": "ast/index.js",
   "scripts": {
-    "ast": "node astTest.js",
+    "createfile": "node examples/createfile.js",
+    "loadfile": "node examples/loadfile.js",
     "test": "npm run test:unit",
     "test:unit": "mocha --recursive --reporter spec test/unit/scalar test/unit/mixed test/unit/core"
   },
