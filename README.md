@@ -3,14 +3,47 @@
 Experimental work to see if there is a blend of JSON with simple extension functions that keeps
 the nice attributes of JSON, but, allows simple functions and lookups for common use cases that are often moved to JavaScript.
 
+Example json with the features:
+
+```json
+{
+  "john": {
+    "age": "23",
+    "lastname": "smith"
+  },
+  "bob": {
+    "age": "29",
+    "firstname": "bob",
+    "lastname": "smith",
+    "fullname": { "$concat": ["$bob.firstname", " ", "$bob.lastname"]}
+  },
+  "jonny": {
+    "age": {"$value": "$bob.age"},
+    "firstname": {"$value": "$bob.firstname"},
+    "lastname":  {"$value": "$bob.lastname"},
+    "fullname": { "$concat": ["$bob.firstname", " ", "$bob.lastname"]},
+    "home_directory": {"$value": "$options.home"}
+  },
+  "greg": {
+    "age": { "$value": "$options.defaultAge"},
+    "lastname": "smith"
+  },
+  "options": {
+    "defaultAge": "21",
+    "home": {"$process.env": "HOME"}
+  }
+}
+
+```
+## Features
+* Injection of environment variables into the JSON.
+* Basic concatination functions
+* Basic references to copy values from one part of the JSON document to another without duplicating the values.
+* Index for items in the JSON object to allow 'flattened' access (i.e. root.container.somevalue)
+
 ## Feature Backlog
 
-Injection of environment variables into the JSON.
-Basic concatination functions
-Basic references to copy values from one part of the JSON document to another without duplicating the values.
-Index for items in the JSON object to allow 'flattened' access (i.e. root.container.somevalue)
-
-## references
+## References
 
 https://www.youtube.com/watch?v=ymjClXYuG2w&index=3&list=PLe-ggMe31CTcEwaU8a1P1Gd95A77HV85K
 
