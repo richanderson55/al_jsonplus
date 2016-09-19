@@ -1,6 +1,6 @@
 {
   "name": "al_jsonplus",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Experimental json loader that added basic functions to json like $value, $process.env, $concat but 100% in JSON format",
   "main": "ast/index.js",
   "scripts": {

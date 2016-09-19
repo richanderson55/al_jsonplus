@@ -56,6 +56,10 @@ npm run loadfile
 
 https://www.youtube.com/watch?v=ymjClXYuG2w&index=3&list=PLe-ggMe31CTcEwaU8a1P1Gd95A77HV85K
 
+### License
+
+jsonplis is [BSD licensed](./LICENSE.md).
+
 ### Copyright (c) 2016 Richard Anderson
 
 Permission is hereby granted, free of charge, to any person obtaining a
