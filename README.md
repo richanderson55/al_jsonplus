@@ -36,10 +36,19 @@ Example json with the features:
 
 ```
 ## Features
-* Injection of environment variables into the JSON.
-* Basic concatination functions
-* Basic references to copy values from one part of the JSON document to another without duplicating the values.
+* Injection of environment variables ($process.env or $env command).
+* Copy values from one part of the JSON document to another without duplicating the values ($value command)
+* Basic concatination functions ($concat command)
 * Index for items in the JSON object to allow 'flattened' access (i.e. root.container.somevalue)
+* Ability to call custom functions so JavaScript can be used to expand/inject content ($function command)
+
+## Examples
+
+To see the example above in action you can use this command:
+
+```sh
+npm run loadfile
+```
 
 ## Feature Backlog
 
